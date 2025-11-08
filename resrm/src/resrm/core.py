@@ -11,7 +11,6 @@ Basic usage:
   resrm -l                    # list trash entries (neat table)
   resrm --restore <id|name>   # restore by short-id (8 chars) or exact basename
   resrm --empty               # empty trash entries (permanent)
-  resrm --complete-restore <prefix>  # machine-friendly list for completion (internal)
 """
 
 from __future__ import annotations
@@ -52,10 +51,6 @@ def get_trash_paths() -> tuple[Path, Path]:
 
 
 TRASH_DIR, META_FILE = get_trash_paths()
-
-
-TRASH_DIR, META_FILE = get_trash_paths()
-
 DATEFMT = "%Y-%m-%d %H:%M"
 
 def load_meta() -> List[Dict]:
@@ -77,10 +72,14 @@ def short_id(fullid: str) -> str:
     return fullid[:8]
 
 def human_time(ts: str) -> str:
-    # ts is ISO format
+    """
+    Convert ISO timestamp string from metadata to a human-readable format.
+    """
     try:
-        return ts[:19]  # YYYY-MM-DDTHH:MM:SS
+        dt = datetime.datetime.fromisoformat(ts)
+        return dt.strftime(DATEFMT)
     except Exception:
+        # Fallback: just return the raw string
         return ts
 
 def entry_display(entry: Dict, width: int = 80) -> str:
@@ -265,18 +264,6 @@ def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, p
 
     print(f"Removed '{path}' -> trash id {short_id(uid)}")
 
-def complete_restore(prefix: str):
-    # prints suggestions line by line for shell completion
-    out = []
-    for e in meta:
-        name = Path(e["orig_path"]).name
-        if name.startswith(prefix) or short_id(e["id"]).startswith(prefix):
-            out.append(name)
-            out.append(short_id(e["id"]))
-    # unique and print
-    for x in sorted(set(out)):
-        print(x)
-
 def main(argv: Optional[List[str]] = None):
     if argv is None:
         argv = sys.argv[1:]
@@ -289,19 +276,12 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument("--restore", nargs=1, help="restore by id or basename")
     parser.add_argument("-l", action="store_true", help="list trash")
     parser.add_argument("--empty", action="store_true", help="empty the trash permanently")
-    parser.add_argument("--complete-restore", nargs=1, help=argparse.SUPPRESS)
     parser.add_argument("--help", action="store_true", help="show help")
     args = parser.parse_args(argv)
 
     # Always print docstring if --help or no args
     if args.help or not argv:
         print(__doc__)
-        return
-
-    # internal completion hook
-    if args.complete_restore:
-        prefix = args.complete_restore[0] or ""
-        complete_restore(prefix)
         return
 
     if args.l:
