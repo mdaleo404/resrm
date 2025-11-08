@@ -26,7 +26,7 @@ poetry add resrm
 Or clone the repo and install locally:
 
 ```bash
-git clone https://github.com/yourusername/resrm.git
+git clone https://github.com/mdaleo404/resrm.git
 cd resrm
 poetry install
 ```
