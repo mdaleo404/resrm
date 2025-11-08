@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "resrm"
+version = "0.1.0"
+description = "drop-in replacement for rm with undo/restore built-in."
+authors = ["Marco D'Aleo <marco@marcodaleo.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+homepage = "https://github.com/mdaleo404/resrm"
+repository = "https://github.com/mdaleo404/resrm"
+packages = [{include = "resrm", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+
+[tool.poetry.scripts]
+resrm = "resrm.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

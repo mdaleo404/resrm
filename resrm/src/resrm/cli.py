@@ -1,0 +1,1 @@
+from resrm.core import main
