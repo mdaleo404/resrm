@@ -1,0 +1,48 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.8.4
+
+      - name: Install dependencies
+        run: poetry install --no-root --only main
+
+      - name: Build package
+        run: poetry build
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          for file in *; do
+            sha256sum "$file" > "$file.sha256"
+          done
+
+      - name: Publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish
+
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*
