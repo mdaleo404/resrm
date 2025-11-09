@@ -1,0 +1,11 @@
+{
+    "release-type": "python",
+    "package-name": "resrm",
+    "changelog-sections": [
+        { "type": "feat", "section": "Added", "hidden": false },
+        { "type": "fix", "section": "Fixed", "hidden": false },
+        { "type": "refactor", "section": "Changed", "hidden": false },
+        { "type": "perf", "section": "Changed", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": false }
+    ]
+}

@@ -12,16 +12,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Release Please
-        uses: google-github-actions/release-please-action@v4
+      - name: Release Please
+        uses: googleapis/release-please-action@v4
         with:
-          release-type: python
-          package-name: resrm
-          changelog-types: |
-            [
-              {"type":"feat","section":"Added","hidden":false},
-              {"type":"fix","section":"Fixed","hidden":false},
-              {"type":"refactor","section":"Changed","hidden":false},
-              {"type":"perf","section":"Changed","hidden":false},
-              {"type":"docs","section":"Documentation","hidden":false}
-            ]
+          token: ${{ secrets.GITHUB_TOKEN }}
