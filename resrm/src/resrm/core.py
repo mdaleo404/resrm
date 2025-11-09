@@ -116,6 +116,41 @@ def find_candidates(identifier: str) -> List[Dict]:
     if id_matches:
         return id_matches
 
+def restore_many(identifiers: List[str]):
+    """Restore multiple files, prompting when needed."""
+    for identifier in identifiers:
+        candidates = find_candidates(identifier)
+
+        if not candidates:
+            print(f"No match found for '{identifier}'")
+            continue
+
+        # Only one match - restore immediately
+        if len(candidates) == 1:
+            restore_one(candidates[0])
+            continue
+
+        # Multiple matches - prompt user
+        print(f"Multiple matches for '{identifier}':")
+        for i, entry in enumerate(candidates, start=1):
+            print(f"{i}) {short_id(entry['id'])}  {entry['orig_path']}  ({entry['timestamp']})")
+
+        try:
+            choice = input("Choose number to restore (or skip): ").strip()
+        except KeyboardInterrupt:
+            print("\nAborted.")
+            return
+
+        if not choice.isdigit():
+            print("Skipped.")
+            continue
+
+        idx = int(choice) - 1
+        if 0 <= idx < len(candidates):
+            restore_one(candidates[idx])
+        else:
+            print("Invalid selection. Skipped.")
+
 def restore_one(entry: Dict) -> bool:
     src = TRASH_DIR / entry["id"]
     dest = Path(entry["orig_path"])
@@ -273,7 +308,7 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument("-f", action="store_true", help="force")
     parser.add_argument("-i", action="store_true", help="interactive")
     parser.add_argument("--perma", action="store_true", help="permanent delete")
-    parser.add_argument("--restore", nargs=1, help="restore by id or basename")
+    parser.add_argument("--restore", nargs="+", help="restore by id or basename")
     parser.add_argument("-l", action="store_true", help="list trash")
     parser.add_argument("--empty", action="store_true", help="empty the trash permanently")
     parser.add_argument("--help", action="store_true", help="show help")
@@ -293,7 +328,7 @@ def main(argv: Optional[List[str]] = None):
         return
 
     if args.restore:
-        restore(args.restore[0])
+        restore_many(args.restore)
         return
 
     if not args.paths:
