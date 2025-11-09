@@ -18,9 +18,9 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 ## Installation
 
 **NOTE:** To use `resrm` with `sudo`, the path to `resrm` must be in the `$PATH` seen by `root`.\
-Either install `resrm` as `root`, use `sudo -E resrm`, or add the `$PATH` to `/etc/sudoers` using its `Defaults secure_path` parameter.
+Either install `resrm` as `root` (_preferred_), use `sudo -E resrm`, or add the `$PATH` to `/etc/sudoers` using its `Defaults secure_path` parameter.
 
-Install via PyPI:
+Install via PyPI (_preferred_):
 
 ```bash
 pip install resrm
