@@ -30,7 +30,7 @@ Or clone the repo and install locally:
 
 ```bash
 git clone https://github.com/mdaleo404/resrm.git
-cd resrm/resrm
+cd resrm/
 poetry install
 ```
 
