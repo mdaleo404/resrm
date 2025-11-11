@@ -7,7 +7,7 @@ Basic usage:
   resrm -r dir                # recursive remove (moves dir to trash)
   resrm -f file               # ignore nonexistent, no prompt
   resrm -i file               # interactive prompt before removal
-  resrm --perma file          # permanent delete (bypass trash)
+  resrm --skip-trash file     # permanent delete (bypass trash)
   resrm -l                    # list trash entries (neat table)
   resrm --restore <id|name>   # restore by short-id (8 chars) or exact basename
   resrm --empty               # empty trash entries (permanent)
@@ -216,7 +216,7 @@ def empty_trash():
     save_meta(meta)
     print(f"Trash emptied ({count} entries removed).")
 
-def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, perma: bool):
+def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, skip_trash: bool):
     if not path.exists():
         if force:
             return
@@ -234,7 +234,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, p
             return
 
     # Permanent delete path
-    if perma:
+    if skip_trash:
         try:
             if path.is_dir() and not path.is_symlink():
                 shutil.rmtree(path)
@@ -305,13 +305,13 @@ def main(argv: Optional[List[str]] = None):
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("paths", nargs="*", help="files to remove")
     parser.add_argument("-r", action="store_true", help="recursive")
-    parser.add_argument("-f", action="store_true", help="force")
+    parser.add_argument("-f", "--force", action="store_true", help="force")
     parser.add_argument("-i", action="store_true", help="interactive")
-    parser.add_argument("--perma", action="store_true", help="permanent delete")
+    parser.add_argument("--skip-trash", action="store_true", help="permanent delete")
     parser.add_argument("--restore", nargs="+", help="restore by id or basename")
     parser.add_argument("-l", action="store_true", help="list trash")
     parser.add_argument("--empty", action="store_true", help="empty the trash permanently")
-    parser.add_argument("--help", action="store_true", help="show help")
+    parser.add_argument("-h", "--help", action="store_true", help="show help")
     args = parser.parse_args(argv)
 
     # Always print docstring if --help or no args
@@ -344,4 +344,4 @@ def main(argv: Optional[List[str]] = None):
                 continue
             print(f"resrm: cannot remove '{pth}': Is a directory")
             continue
-        move_to_trash(pth, interactive=args.i, force=args.f, recursive=args.r, perma=args.perma)
+        move_to_trash(pth, interactive=args.i, force=args.force, recursive=args.r, skip_trash=args.skip_trash)
