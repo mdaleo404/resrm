@@ -10,7 +10,7 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 - Move files and directories to a **trash folder** instead of permanent deletion  
 - Restore deleted files by **short ID or exact basename**  
 - Empty trash safely  
-- Supports `-r`, `-f`, `-i`, `--perma` options  
+- Supports `-r`, `-f`, `-i`, `--skip-trash` options  
 - Works with `sudo` for root-owned files  
 
 ---
@@ -57,7 +57,7 @@ resrm -f file
 resrm -i file
 
 # Permanent delete (bypass trash)
-resrm --perma file
+resrm --skip-trash file
 
 # List trash entries
 resrm -l
