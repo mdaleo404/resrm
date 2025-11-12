@@ -7,11 +7,23 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 
 ## Features
 
-- Move files and directories to a **trash folder** instead of permanent deletion  
-- Restore deleted files by **short ID or exact basename**  
-- Empty trash safely  
-- Supports `-r`, `-f`, `-i`, `--skip-trash` options  
-- Works with `sudo` for root-owned files  
+- Move files and directories to a **Trash folder** instead of permanent deletion
+- Restore deleted files by **short ID or exact basename**
+- Empty trash safely
+- Supports `-r`, `-f`, `-i`, `--skip-trash` options
+- Works with `sudo` for root-owned files
+- Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)  
+  > Note: if you need immediate deletion, use the regular `rm` command instead.
+
+---
+
+## Configuration
+
+To control how long trashed files are kept, add this line to your shell configuration (e.g. `~/.bashrc`):
+
+```bash
+export RESRM_TRASH_LIFE=10
+```
 
 ---
 

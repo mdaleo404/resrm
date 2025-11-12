@@ -53,6 +53,42 @@ def get_trash_paths() -> tuple[Path, Path]:
 TRASH_DIR, META_FILE = get_trash_paths()
 DATEFMT = "%Y-%m-%d %H:%M"
 
+def prune_old_trash():
+    """Remove trash entries older than RESRM_TRASH_LIFE days (default 7)."""
+    try:
+        life_days = int(os.environ.get("RESRM_TRASH_LIFE", "7"))
+    except ValueError:
+        life_days = 7
+
+    if life_days < 1:
+        life_days = 1
+
+    cutoff = datetime.datetime.now() - datetime.timedelta(days=life_days)
+    removed = 0
+
+    for entry in list(meta):  # make copy since we'll modify meta
+        try:
+            ts = datetime.datetime.fromisoformat(entry["timestamp"])
+        except Exception:
+            continue  # skip malformed entries
+
+        if ts < cutoff:
+            f = TRASH_DIR / entry["id"]
+            try:
+                if f.exists():
+                    if f.is_dir():
+                        shutil.rmtree(f, ignore_errors=True)
+                    else:
+                        f.unlink(missing_ok=True)
+                meta.remove(entry)
+                removed += 1
+            except Exception as e:
+                print(f"Failed to prune {f}: {e}")
+
+    if removed > 0:
+        save_meta(meta)
+        print(f"Pruned {removed} trash entr{'y' if removed == 1 else 'ies'} older than {life_days} da{'y' if life_days == 1 else 'ys'}.")
+
 def load_meta() -> List[Dict]:
     if META_FILE.exists():
         try:
@@ -304,6 +340,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
 def main(argv: Optional[List[str]] = None):
     if argv is None:
         argv = sys.argv[1:]
+    prune_old_trash()
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("paths", nargs="*", help="files to remove")
     parser.add_argument("-r", action="store_true", help="recursive")
