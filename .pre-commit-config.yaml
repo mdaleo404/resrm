@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: bandit
         files: ^src/resrm/
-        args: ["-s", "B110,B112"]
+        args: ["-lll", "-iii", "-s", "B110,B112"]
 
   - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 25.11.0
