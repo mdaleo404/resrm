@@ -14,8 +14,6 @@ python = "^3.13"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^3.8"
-bandit = "^1.7"
-black = "^25.0"
 
 [tool.poetry.scripts]
 resrm = "resrm.cli:main"
