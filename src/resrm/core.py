@@ -25,6 +25,7 @@ import textwrap
 from pathlib import Path
 from typing import List, Dict, Optional
 
+
 # Config
 def get_trash_base_for_user(uid: int) -> Path:
     """Return the trash base path depending on whether user is root or normal."""
@@ -33,6 +34,7 @@ def get_trash_base_for_user(uid: int) -> Path:
     else:
         try:
             import pwd
+
             user_info = pwd.getpwuid(uid)
             home_dir = Path(user_info.pw_dir)
         except Exception:
@@ -52,6 +54,7 @@ def get_trash_paths() -> tuple[Path, Path]:
 
 TRASH_DIR, META_FILE = get_trash_paths()
 DATEFMT = "%Y-%m-%d %H:%M"
+
 
 def prune_old_trash():
     """Remove trash entries older than RESRM_TRASH_LIFE days (default 7)."""
@@ -87,7 +90,10 @@ def prune_old_trash():
 
     if removed > 0:
         save_meta(meta)
-        print(f"Pruned {removed} trash entr{'y' if removed == 1 else 'ies'} older than {life_days} da{'y' if life_days == 1 else 'ys'}.")
+        print(
+            f"Pruned {removed} trash entr{'y' if removed == 1 else 'ies'} older than {life_days} da{'y' if life_days == 1 else 'ys'}."
+        )
+
 
 def load_meta() -> List[Dict]:
     if META_FILE.exists():
@@ -98,14 +104,18 @@ def load_meta() -> List[Dict]:
             return []
     return []
 
+
 def save_meta(meta: List[Dict]):
     with META_FILE.open("w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2, ensure_ascii=False)
 
+
 meta = load_meta()
+
 
 def short_id(fullid: str) -> str:
     return fullid[:8]
+
 
 def human_time(ts: str) -> str:
     """
@@ -118,12 +128,14 @@ def human_time(ts: str) -> str:
         # Fallback: just return the raw string
         return ts
 
+
 def entry_display(entry: Dict, width: int = 80) -> str:
     id8 = short_id(entry["id"])
     ts = human_time(entry["timestamp"])
     path = entry["orig_path"]
-    wrapped = textwrap.fill(path, width=width-32)
+    wrapped = textwrap.fill(path, width=width - 32)
     return f"{id8:<8} {ts:<19} {wrapped}"
+
 
 def list_trash():
     if not meta:
@@ -132,15 +144,16 @@ def list_trash():
 
     header = f"{'ID':<8} {'Deleted at':<19} {'Original path'}"
     print(header)
-    print('-' * len(header))
+    print("-" * len(header))
     for entry in meta:
         id8 = short_id(entry["id"])
         ts = human_time(entry["timestamp"])
         path = entry["orig_path"]
         max_path_len = 80
         if len(path) > max_path_len:
-            path = "…" + path[-(max_path_len - 1):]
+            path = "…" + path[-(max_path_len - 1) :]
         print(f"{id8:<8} {ts:<19} {path}")
+
 
 def find_candidates(identifier: str) -> List[Dict]:
     # exact basename match first
@@ -153,6 +166,7 @@ def find_candidates(identifier: str) -> List[Dict]:
         return id_matches
 
     return []
+
 
 def restore_many(identifiers: List[str]):
     """Restore multiple files, prompting when needed."""
@@ -171,7 +185,9 @@ def restore_many(identifiers: List[str]):
         # Multiple matches - prompt user
         print(f"Multiple matches for '{identifier}':")
         for i, entry in enumerate(candidates, start=1):
-            print(f"{i}) {short_id(entry['id'])}  {entry['orig_path']}  ({entry['timestamp']})")
+            print(
+                f"{i}) {short_id(entry['id'])}  {entry['orig_path']}  ({entry['timestamp']})"
+            )
 
         try:
             choice = input("Choose number to restore (or skip): ").strip()
@@ -188,6 +204,7 @@ def restore_many(identifiers: List[str]):
             restore_one(candidates[idx])
         else:
             print("Invalid selection. Skipped.")
+
 
 def restore_one(entry: Dict) -> bool:
     src = TRASH_DIR / entry["id"]
@@ -210,6 +227,7 @@ def restore_one(entry: Dict) -> bool:
     print(f"Restored to: {dest}")
     return True
 
+
 def restore(identifier: str):
     candidates = find_candidates(identifier)
     if not candidates:
@@ -221,7 +239,9 @@ def restore(identifier: str):
     # multiple candidates -> show list and ask
     print("Multiple matches:")
     for i, e in enumerate(candidates, start=1):
-        print(f"{i}) {short_id(e['id'])}  {e['orig_path']}  ({e['timestamp']})")
+        print(
+            f"{i}) {short_id(e['id'])}  {e['orig_path']}  ({e['timestamp']})"
+        )
     try:
         choice = input("Choose number to restore (or abort): ").strip()
     except KeyboardInterrupt:
@@ -235,6 +255,7 @@ def restore(identifier: str):
         print("Invalid selection.")
         return
     restore_one(candidates[idx])
+
 
 def empty_trash():
     """Permanently remove all trashed files and clear metadata."""
@@ -254,7 +275,10 @@ def empty_trash():
     save_meta(meta)
     print(f"Trash emptied ({count} entries removed).")
 
-def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
+
+def move_to_trash(
+    path: Path, interactive: bool, force: bool, skip_trash: bool
+):
     if not path.exists():
         if force:
             return
@@ -286,7 +310,9 @@ def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
     try:
         st = path.stat()
         if st.st_uid == 0 and os.geteuid() != 0:
-            print(f"resrm: permission denied: '{path}' (root-owned file, try sudo)")
+            print(
+                f"resrm: permission denied: '{path}' (root-owned file, try sudo)"
+            )
             return
     except Exception:
         pass
@@ -294,6 +320,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
     # Detect which trash to use (based on file owner)
     try:
         import pwd
+
         owner_uid = path.stat().st_uid
         owner_info = pwd.getpwuid(owner_uid)
         owner_home = Path(owner_info.pw_dir)
@@ -329,13 +356,14 @@ def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
     entry = {
         "id": uid,
         "orig_path": str(path.resolve()),
-        "timestamp": datetime.datetime.now().isoformat()
+        "timestamp": datetime.datetime.now().isoformat(),
     }
     owner_meta.append(entry)
     with meta_file.open("w", encoding="utf-8") as f:
         json.dump(owner_meta, f, indent=2, ensure_ascii=False)
 
     print(f"Removed '{path}' -> trash id {short_id(uid)}")
+
 
 def main(argv: Optional[List[str]] = None):
     if argv is None:
@@ -346,12 +374,23 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument("-r", action="store_true", help="recursive")
     parser.add_argument("-f", "--force", action="store_true", help="force")
     parser.add_argument("-i", action="store_true", help="interactive")
-    parser.add_argument("--skip-trash", action="store_true", help="permanent delete")
-    parser.add_argument("--restore", nargs="+", metavar="item", help="restore by id or basename")
+    parser.add_argument(
+        "--skip-trash", action="store_true", help="permanent delete"
+    )
+    parser.add_argument(
+        "--restore",
+        nargs="+",
+        metavar="item",
+        help="restore by id or basename",
+    )
     parser.add_argument("-l", action="store_true", help="list trash")
-    parser.add_argument("--empty", action="store_true", help="empty the trash permanently")
+    parser.add_argument(
+        "--empty", action="store_true", help="empty the trash permanently"
+    )
     parser.add_argument("-h", "--help", action="store_true", help="show help")
-    parser.add_argument("-V", "--version", action="store_true", help="show version")
+    parser.add_argument(
+        "-V", "--version", action="store_true", help="show version"
+    )
     args = parser.parse_args(argv)
 
     # Always print docstring if -h or --help
@@ -393,4 +432,9 @@ def main(argv: Optional[List[str]] = None):
                 continue
             print(f"resrm: cannot remove '{pth}': Is a directory")
             continue
-        move_to_trash(pth, interactive=args.i, force=args.force, skip_trash=args.skip_trash)
+        move_to_trash(
+            pth,
+            interactive=args.i,
+            force=args.force,
+            skip_trash=args.skip_trash,
+        )

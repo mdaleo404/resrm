@@ -1,6 +1,6 @@
 # resrm
 
-**resrm** is a safe, drop-in replacement for the Linux `rm` command with **undo/restore support**.  
+**resrm** is a safe, drop-in replacement for the Linux `rm` command with **undo/restore support**.
 It moves files to a per-user _trash_ instead of permanently deleting them, while still allowing full `sudo` support for root-owned files.
 
 ---
@@ -12,7 +12,7 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 - Empty trash safely
 - Supports `-r`, `-f`, `-i`, `--skip-trash` options
 - Works with `sudo` for root-owned files
-- Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)  
+- Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)
   > Note: if you need immediate deletion, use the regular `rm` command instead.
 
 ---
@@ -86,3 +86,13 @@ resrm --empty
 Normal users: `~/.local/share/resrm/files`
 
 Root user: `/root/.local/share/resrm/files`
+
+## pre-commit
+This project uses [**pre-commit**](https://pre-commit.com/) to run automatic formatting and security checks before each commit (Black, Bandit, and various safety checks).
+
+To enable it:
+```
+poetry install
+poetry run pre-commit install
+```
+This ensures consistent formatting, catches common issues early, and keeps the codebase clean.
