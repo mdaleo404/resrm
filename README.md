@@ -86,3 +86,13 @@ resrm --empty
 Normal users: `~/.local/share/resrm/files`
 
 Root user: `/root/.local/share/resrm/files`
+
+## pre-commit
+This project uses [**pre-commit**](https://pre-commit.com/) to run automatic formatting and security checks before each commit (Black, Bandit, and various safety checks).
+
+To enable it:
+```
+poetry install
+poetry run pre-commit install
+```
+This ensures consistent formatting, catches common issues early, and keeps the codebase clean.
