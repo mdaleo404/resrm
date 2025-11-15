@@ -1,6 +1,6 @@
 # resrm
 
-**resrm** is a safe, drop-in replacement for the Linux `rm` command with **undo/restore support**.  
+**resrm** is a safe, drop-in replacement for the Linux `rm` command with **undo/restore support**.
 It moves files to a per-user _trash_ instead of permanently deleting them, while still allowing full `sudo` support for root-owned files.
 
 ---
@@ -12,7 +12,7 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 - Empty trash safely
 - Supports `-r`, `-f`, `-i`, `--skip-trash` options
 - Works with `sudo` for root-owned files
-- Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)  
+- Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)
   > Note: if you need immediate deletion, use the regular `rm` command instead.
 
 ---
