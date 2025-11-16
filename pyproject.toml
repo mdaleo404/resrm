@@ -10,7 +10,7 @@ repository = "https://github.com/mdaleo404/resrm"
 packages = [{include = "resrm", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = ">=3.10,<4.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^3.8"
@@ -20,7 +20,6 @@ resrm = "resrm.cli:main"
 
 [tool.black]
 line-length = 79
-target-version = ["py313"]
 
 [build-system]
 requires = ["poetry-core"]
