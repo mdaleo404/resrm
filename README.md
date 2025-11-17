@@ -32,6 +32,8 @@ export RESRM_TRASH_LIFE=10
 
 ### From package manager
 
+This is the preferred method of installation.
+
 **Ubuntu 22.04 and 24.04**
 ```
 sudo add-apt-repository ppa:mdaleo/resrm
@@ -50,14 +52,14 @@ sudo dnf install resrm
 **NOTE:** To use `resrm` with `sudo`, the path to `resrm` must be in the `$PATH` seen by `root`.\
 Either:
 
- * install `resrm` as `root` (_preferred_), or
+ * install `resrm` as `root`, or
  * add the path to `resrm` to the `secure_path` parameter in `/etc/sudoers`. For example, where `/home/user/.local/bin` is where `resrm` is:
 
 ``` bash
 Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/user/.local/bin"
 ```
 
-Install via PyPI (_preferred_):
+Install with:
 
 ```bash
 pip install resrm
