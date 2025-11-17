@@ -432,7 +432,7 @@ def main(argv: Optional[List[str]] = None):
         pth = Path(p)
         # simplistic recursive handling: if -r not given and it's a directory, mimic rm behavior: error unless -r
         if pth.is_dir() and not args.r:
-            if args.f:
+            if args.force:
                 continue
             print(f"resrm: cannot remove '{pth}': Is a directory")
             continue
