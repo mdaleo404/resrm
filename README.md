@@ -1,8 +1,7 @@
-![License](https://img.shields.io/github/license/mdaleo404/resrm)
-[![Language](https://img.shields.io/github/languages/top/mdaleo404/resrm.svg)](https://github.com/mdaleo404/resrm/)
-![GitHub Release](https://img.shields.io/github/v/release/mdaleo404/resrm?display_name=release&logo=github)
+[![License](https://img.shields.io/github/license/guardutils/resrm?style=flat)](LICENCE)
+[![Language](https://img.shields.io/github/languages/top/guardutils/resrm.svg)](https://github.com/guardutils/resrm/)
+![GitHub Release](https://img.shields.io/github/v/release/guardutils/resrm?display_name=release&logo=github)
 ![PyPI - Version](https://img.shields.io/pypi/v/resrm?logo=pypi)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/mdaleo404/resrm/.github/workflows/lint-and-security.yml)](https://github.com/mdaleo404/resrm/actions)
 [![PyPI downloads](https://img.shields.io/pypi/dm/resrm.svg)](https://pypi.org/project/resrm/)
 
 # resrm
@@ -75,7 +74,7 @@ pip install resrm
 ### From this repository
 
 ```bash
-git clone https://github.com/mdaleo404/resrm.git
+git clone https://github.com/guardutils/resrm.git
 cd resrm/
 poetry install
 ```

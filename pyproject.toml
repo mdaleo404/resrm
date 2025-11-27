@@ -5,8 +5,8 @@ description = "drop-in replacement for rm with undo/restore built-in."
 authors = ["Marco D'Aleo <marco@marcodaleo.com>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-homepage = "https://github.com/mdaleo404/resrm"
-repository = "https://github.com/mdaleo404/resrm"
+homepage = "https://github.com/guardutils/resrm"
+repository = "https://github.com/guardutils/resrm"
 packages = [{include = "resrm", from = "src"}]
 
 [tool.poetry.dependencies]
