@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/github/license/guardutils/resrm?style=flat)](LICENCE)
 [![Language](https://img.shields.io/github/languages/top/guardutils/resrm.svg)](https://github.com/guardutils/resrm/)
-![GitHub Release](https://img.shields.io/github/v/release/guardutils/resrm?display_name=release&logo=github)
-![PyPI - Version](https://img.shields.io/pypi/v/resrm?logo=pypi)
+[![GitHub Release](https://img.shields.io/github/v/release/guardutils/resrm?display_name=release&logo=github)](https://github.com/guardutils/resrm/releases)
+[![PyPI - Version](https://img.shields.io/pypi/v/resrm?logo=pypi)](https://pypi.org/project/resrm/#history)
 [![PyPI downloads](https://img.shields.io/pypi/dm/resrm.svg)](https://pypi.org/project/resrm/)
 
 # resrm
