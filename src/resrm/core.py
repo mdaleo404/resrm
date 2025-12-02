@@ -15,6 +15,7 @@ Basic usage:
 
 from __future__ import annotations
 import argparse
+import argcomplete
 import json
 import os
 import shutil
@@ -385,13 +386,27 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument(
         "--skip-trash", action="store_true", help="permanent delete"
     )
-    parser.add_argument(
+    restore_arg = parser.add_argument(
         "--restore",
         nargs="+",
         metavar="item",
         help="restore by id or basename",
     )
-    parser.add_argument("-l", action="store_true", help="list trash")
+
+    # restore completer
+    def restore_completer(prefix, parsed_args, **kwargs):
+        return [
+            short_id(m["id"])
+            for m in meta
+            if short_id(m["id"]).startswith(prefix)
+        ] + [
+            Path(m["orig_path"]).name
+            for m in meta
+            if Path(m["orig_path"]).name.startswith(prefix)
+        ]
+
+    restore_arg.completer = restore_completer
+    parser.add_argument("-l", "--list", action="store_true", help="list trash")
     parser.add_argument(
         "--empty", action="store_true", help="empty the trash permanently"
     )
@@ -399,6 +414,9 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument(
         "-V", "--version", action="version", version=f"resrm {get_version()}"
     )
+
+    argcomplete.autocomplete(parser)
+
     args = parser.parse_args(argv)
 
     # Always print docstring if -h or --help

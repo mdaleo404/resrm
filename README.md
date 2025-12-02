@@ -113,6 +113,16 @@ Normal users: `~/.local/share/resrm/files`
 
 Root user: `/root/.local/share/resrm/files`
 
+### TAB completion
+Add this to your `.bashrc`
+```
+eval "$(register-python-argcomplete resrm)"
+```
+And then
+```
+source ~/.bashrc
+```
+
 ## pre-commit
 This project uses [**pre-commit**](https://pre-commit.com/) to run automatic formatting and security checks before each commit (Black, Bandit, and various safety checks).
 
