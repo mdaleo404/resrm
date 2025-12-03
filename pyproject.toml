@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "resrm"
-version = "0.3.2"
+version = "0.3.3"
 description = "drop-in replacement for rm with undo/restore built-in."
 authors = ["Marco D'Aleo <marco@marcodaleo.com>"]
 license = "GPL-3.0-or-later"
