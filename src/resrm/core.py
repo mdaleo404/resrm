@@ -8,7 +8,7 @@ Basic usage:
   resrm -f file               # ignore nonexistent, no prompt
   resrm -i file               # interactive prompt before removal
   resrm --skip-trash file     # permanent delete (bypass trash)
-  resrm -l                    # list trash entries (neat table)
+  resrm -l|--list             # list trash entries (neat table)
   resrm --restore <id|name>   # restore by short-id (8 chars) or exact basename
   resrm --empty               # empty trash entries (permanent)
 """
@@ -424,12 +424,12 @@ def main(argv: Optional[List[str]] = None):
         print(__doc__)
         return
 
-    if not args.paths and not (args.l or args.empty or args.restore):
+    if not args.paths and not (args.list or args.empty or args.restore):
         print("resrm: missing operand")
         print("Try 'resrm --help' for more information.")
         return
 
-    if args.l:
+    if args.list:
         list_trash()
         return
 
