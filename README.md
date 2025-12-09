@@ -1,5 +1,5 @@
 [![Licence](https://img.shields.io/badge/GPL--3.0-orange?label=Licence)](https://git.sysmd.uk/guardutils/resrm/src/branch/main/LICENCE)
-![Gitea Release](https://img.shields.io/gitea/v/release/guardutils/resrm?gitea_url=https%3A%2F%2Fgit.sysmd.uk%2F&style=flat&color=orange&logo=gitea)
+[![Gitea Release](https://img.shields.io/gitea/v/release/guardutils/resrm?gitea_url=https%3A%2F%2Fgit.sysmd.uk%2F&style=flat&color=orange&logo=gitea)](https://git.sysmd.uk/guardutils/resrm/releases)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-blue?logo=pre-commit&style=flat)](https://git.sysmd.uk/guardutils/resrm/src/branch/main/.pre-commit-config.yaml)
 
 # resrm
