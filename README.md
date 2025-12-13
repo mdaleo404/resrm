@@ -130,6 +130,9 @@ resrm -l
 # Restore a file by ID or basename
 resrm --restore <id|name>
 
+# Show full details of trashed item
+resrm --inspect <id|name>
+
 # Empty the trash permanently
 resrm --empty
 ```
