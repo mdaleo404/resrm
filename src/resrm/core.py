@@ -269,20 +269,23 @@ def restore(identifier: str):
 
 def empty_trash():
     """Permanently remove all trashed files and clear metadata."""
+
+    # Remove everything inside the trash directory
     count = 0
-    for entry in list(meta):
-        f = TRASH_DIR / entry["id"]
+    for item in TRASH_DIR.iterdir():
         try:
-            if f.exists():
-                if f.is_dir():
-                    shutil.rmtree(f, ignore_errors=True)
-                else:
-                    f.unlink(missing_ok=True)
-            meta.remove(entry)
+            if item.is_dir():
+                shutil.rmtree(item, ignore_errors=True)
+            else:
+                item.unlink(missing_ok=True)
             count += 1
         except Exception as e:
-            print(f"Failed to remove {f}: {e}")
+            print(f"Failed to remove {item}: {e}")
+
+    # Clear metadata
+    meta.clear()
     save_meta(meta)
+
     print(f"Trash emptied ({count} entries removed).")
 
 
@@ -436,7 +439,7 @@ def inspect_entry(identifier: str):
                 group = st.st_gid
             owner = f"{user}:{group}"
 
-            # Size (bytes for file, recursive for directories optional)
+            # Size (bytes for file, recursive for directories)
             size = st.st_size
 
             print(f"Type:          {ftype}")
@@ -445,7 +448,7 @@ def inspect_entry(identifier: str):
             print(f"Ownership:     {owner}")
 
         except Exception as e:
-            print(f"Unknown stats for {e})")
+            print(f"Unknown stats for {e}")
 
 
 def main(argv: Optional[List[str]] = None):
@@ -461,7 +464,7 @@ def main(argv: Optional[List[str]] = None):
         "--skip-trash", action="store_true", help="permanent delete"
     )
 
-    parser.add_argument(
+    inspect_arg = parser.add_argument(
         "--inspect",
         "-I",
         nargs="+",
@@ -476,8 +479,8 @@ def main(argv: Optional[List[str]] = None):
         help="restore by id or basename",
     )
 
-    # restore completer
-    def restore_completer(prefix, parsed_args, **kwargs):
+    # completer
+    def id_name_completer(prefix, parsed_args, **kwargs):
         return [
             short_id(m["id"])
             for m in meta
@@ -488,7 +491,8 @@ def main(argv: Optional[List[str]] = None):
             if Path(m["orig_path"]).name.startswith(prefix)
         ]
 
-    restore_arg.completer = restore_completer
+    restore_arg.completer = id_name_completer
+    inspect_arg.completer = id_name_completer
     parser.add_argument("-l", "--list", action="store_true", help="list trash")
     parser.add_argument(
         "--empty", action="store_true", help="empty the trash permanently"
