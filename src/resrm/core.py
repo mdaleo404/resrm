@@ -10,6 +10,7 @@ Basic usage:
   resrm --skip-trash file     # permanent delete (bypass trash)
   resrm -l|--list             # list trash entries (neat table)
   resrm --restore <id|name>   # restore by short-id (8 chars) or exact basename
+  resrm --inspect <id|name>   # output full detail list of trashed item
   resrm --empty               # empty trash entries (permanent)
 """
 
@@ -374,6 +375,79 @@ def move_to_trash(
     print(f"Removed '{path}' -> trash id {short_id(uid)}")
 
 
+def inspect_entry(identifier: str):
+    """Show full information about trash entries matching the identifier."""
+    candidates = find_candidates(identifier)
+
+    if not candidates:
+        print(f"No match found for '{identifier}'")
+        return
+
+    for entry in candidates:
+
+        # Validate entry structure
+        if not isinstance(entry, dict):
+            print(f"Invalid metadata entry (not a dict): {entry!r}")
+            print()
+            continue
+
+        entry_id = entry.get("id")
+        orig_path = entry.get("orig_path", "?")
+        timestamp = entry.get("timestamp", "?")
+
+        if not entry_id:
+            print(f"Invalid metadata entry (missing id): {entry}")
+            continue
+
+        trash_path = TRASH_DIR / entry_id
+
+        print(f"ID:            {short_id(entry_id)}")
+        print(f"Original:      {orig_path}")
+        print(f"Deleted at:    {human_time(timestamp)}")
+        print(f"Stored at:     {trash_path}")
+
+        try:
+            st = trash_path.lstat()  # preserves symlink info
+            import stat, pwd, grp
+
+            # Type detection
+            if stat.S_ISDIR(st.st_mode):
+                ftype = "directory"
+            elif stat.S_ISLNK(st.st_mode):
+                try:
+                    target = os.readlink(trash_path)
+                    ftype = f"symlink → {target}"
+                except Exception:
+                    ftype = "symlink"
+            else:
+                ftype = "file"
+
+            # Permissions
+            perms = stat.filemode(st.st_mode)
+
+            # Ownership
+            try:
+                user = pwd.getpwuid(st.st_uid).pw_name
+            except Exception:
+                user = st.st_uid
+            try:
+                group = grp.getgrgid(st.st_gid).gr_name
+            except Exception:
+                group = st.st_gid
+            owner = f"{user}:{group}"
+
+            # Size (bytes for file, recursive for directories optional)
+            size = st.st_size
+
+            print(f"Type:          {ftype}")
+            print(f"Size:          {size} bytes")
+            print(f"Permissions:   {perms}")
+            print(f"Ownership:     {owner}")
+
+        except Exception as e:
+            print(f"Unknown stats for {e})")
+
+
 def main(argv: Optional[List[str]] = None):
     if argv is None:
         argv = sys.argv[1:]
@@ -386,6 +460,15 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument(
         "--skip-trash", action="store_true", help="permanent delete"
     )
+
+    parser.add_argument(
+        "--inspect",
+        "-I",
+        nargs="+",
+        metavar="item",
+        help="show full metadata and original path for this trash entry",
+    )
+
     restore_arg = parser.add_argument(
         "--restore",
         nargs="+",
@@ -424,13 +507,20 @@ def main(argv: Optional[List[str]] = None):
         print(__doc__)
         return
 
-    if not args.paths and not (args.list or args.empty or args.restore):
+    if not args.paths and not (
+        args.list or args.empty or args.restore or args.inspect
+    ):
         print("resrm: missing operand")
         print("Try 'resrm --help' for more information.")
         return
 
     if args.list:
         list_trash()
+        return
+
+    if args.inspect:
+        for item in args.inspect:
+            inspect_entry(item)
         return
 
     if args.empty:
