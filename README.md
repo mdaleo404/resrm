@@ -4,6 +4,10 @@
 
 # resrm
 
+<div align="center">
+  <img src="resrm.png" alt="resrm logo" width="256" />
+</div>
+
 **resrm** is a safe, drop-in replacement for the Linux `rm` command with **undo/restore support**.
 It moves files to a per-user _trash_ instead of permanently deleting them, while still allowing full `sudo` support for root-owned files.
 
