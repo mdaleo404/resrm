@@ -13,7 +13,7 @@ packages = [{include = "resrm", from = "src"}]
 python = ">=3.10,<4.0"
 argcomplete = ">=2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8"
 
 [tool.poetry.scripts]
