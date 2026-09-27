@@ -1,27 +1,31 @@
-[tool.poetry]
+[project]
 name = "resrm"
 version = "0.4.1"
 description = "drop-in replacement for rm with undo/restore built-in."
-authors = ["Marco D'Aleo <marco@marcodaleo.com>"]
+authors = [{ name = "Marco D'Aleo", email = "marco@marcodaleo.com" }]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-homepage = "https://git.sysmd.uk/guardutils/resrm"
-repository = "https://git.sysmd.uk/guardutils/resrm"
-packages = [{include = "resrm", from = "src"}]
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "argcomplete>=2",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<4.0"
-argcomplete = ">=2"
+[project.urls]
+Homepage = "https://git.sysmd.uk/guardutils/resrm"
+Repository = "https://git.sysmd.uk/guardutils/resrm"
+
+[project.scripts]
+resrm = "resrm.cli:main"
+
+[tool.poetry]
+packages = [{include = "resrm", from = "src"}]
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8"
-
-[tool.poetry.scripts]
-resrm = "resrm.cli:main"
 
 [tool.black]
 line-length = 79
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
