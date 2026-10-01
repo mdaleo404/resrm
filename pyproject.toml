@@ -1,6 +1,6 @@
 [project]
 name = "resrm"
-version = "0.4.1"
+version = "0.4.2"
 description = "drop-in replacement for rm with undo/restore built-in."
 authors = [{ name = "Marco D'Aleo", email = "marco@marcodaleo.com" }]
 license = "GPL-3.0-or-later"
