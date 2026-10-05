@@ -1,11 +1,11 @@
 [project]
 name = "resrm"
-version = "0.4.2"
+version = "0.5.0"
 description = "drop-in replacement for rm with undo/restore built-in."
 authors = [{ name = "Marco D'Aleo", email = "marco@marcodaleo.com" }]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.11,<4.0"
 dependencies = [
     "argcomplete>=2",
 ]
