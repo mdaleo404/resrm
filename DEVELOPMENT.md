@@ -58,7 +58,9 @@ src/resrm/
   core.py                  CLI, trash metadata, restore, delete, prune logic
 
 tests/
-  __init__.py              test package marker; no substantive tests currently
+  __init__.py              test package marker
+  conftest.py              autouse fixture isolating trash state to a temp tree
+  test_core.py             focused unit tests for metadata, move, restore, prune
 
 pyproject.toml             Poetry package metadata and console script
 poetry.lock                locked dependency graph
@@ -493,13 +495,19 @@ Run pre-commit hooks:
 poetry run pre-commit run --all-files
 ```
 
+Run the test suite:
+
+```bash
+poetry run pytest
+```
+
 Build release artifacts:
 
 ```bash
 poetry build
 ```
 
-There is a `tests/` package marker, but no substantive pytest suite is configured in `pyproject.toml` at the time of writing. If tests are added, add pytest as a development dependency and prefer focused tests using temporary directories and isolated metadata files.
+`pytest` is a development dependency and a focused suite exists in `tests/test_core.py`. `tests/conftest.py` provides an autouse fixture that redirects `TRASH_DIR`, `META_FILE`, `meta`, and `pwd.getpwuid` into a temporary tree, so tests never touch a real user's trash. Prefer adding focused tests using that fixture rather than real files.
 
 ---
 
@@ -509,11 +517,16 @@ Gitea pull request workflow:
 
 ```text
 .gitea/workflows/lint-and-security.yml
-  -> install pre-commit
-  -> pre-commit run --all-files
-  -> install Poetry and poetry-plugin-export
-  -> poetry export dependencies
-  -> pip-audit dependency audit
+  -> job lint-and-security:
+     -> install pre-commit
+     -> pre-commit run --all-files
+     -> install Poetry and poetry-plugin-export
+     -> poetry export dependencies
+     -> pip-audit dependency audit
+  -> job tests:
+     -> install Poetry
+     -> poetry install --with dev
+     -> poetry run pytest
 ```
 
 Scheduled/manual security workflow:
