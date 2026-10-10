@@ -21,7 +21,7 @@ resrm = "resrm.cli:main"
 packages = [{include = "resrm", from = "src"}]
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.8"
+pre-commit = "^4.0.0"
 pytest = "^9.1.1"
 
 [tool.black]
